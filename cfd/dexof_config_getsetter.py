@@ -11,25 +11,25 @@ class getset_dex_file():
         print('dex file is:\n',self.contents)
     
 
-    def get_casefolder_name(self):
+    def get_casefoldername(self):
        return re.split('casefoldername,input,string,',re.findall('casefoldername,input,string,.*',self.contents)[0])[1]
 
-    def set_casefolder_name(self,folder_location):
+    def set_casefoldername(self,folder_location):
         folder_string= 'casefoldername,input,string,'+ folder_location
-        self.contents=re.sub('casefoldername,input,string,.*',folder_string,contents)
+        self.contents=re.sub('casefoldername,input,string,.*',folder_string,self.contents)
  
-    def get_max_iter(self):
+    def get_maxiter(self):
        return re.split('maxiter,input,discrete,',re.findall('maxiter,input,discrete,.*',self.contents)[0])[1]
 
-    def set_max_iter(self,iter):
-        max_iter_string= 'casefoldername,input,string,'+ str(iter)
+    def set_maxiter(self,iter):
+        max_iter_string= 'maxiter,input,discrete,'+ str(iter)
         self.contents=re.sub('maxiter,input,discrete,.*',max_iter_string,self.contents)
     
     
-    def get_input_file(self):
+    def get_infile(self):
        return re.split('infile,input,string,',re.findall('infile,input,string,.*',self.contents)[0])[1]
 
-    def set_input_file(self,infilename):
+    def set_infile(self,infilename):
         infile_string= 'infile,input,string,'+ infilename
         self.contents=re.sub('infile,input,string,.*',infile_string,self.contents)
 
@@ -48,31 +48,31 @@ class getset_dex_file():
         aoa_string= 'aoa,input,continuous,'+ str(aoa)
         self.contents=re.sub('aoa,input,continuous,.*',aoa_string,self.contents)
 
-    def get_uinlet(self):
+    def get_Uinlet(self):
        return re.split('Uinlet,input,continuous,',re.findall('Uinlet,input,continuous,.*',self.contents)[0])[1]
 
-    def set_uinlet(self,uinlet):
+    def set_Uinlet(self,uinlet):
         uin_string= 'Uinlet,input,continuous,'+ str(uinlet)
         self.contents=re.sub('Uinlet,input,continuous,.*',uin_string,self.contents)
 
-    def get_kvisc(self):
+    def get_kinematic_viscosity(self):
        return re.split('kinematic_viscosity,input,continuous,',re.findall('kinematic_viscosity,input,continuous,.*',self.contents)[0])[1]
 
-    def set_kvisc(self,kin_visc):
+    def set_kinematic_viscosity(self,kin_visc):
         kvisc_string= 'kinematic_viscosity,input,continuous,'+ str(kin_visc)
         self.contents=re.sub('kinematic_viscosity,input,continuous,.*',kvisc_string,self.contents)
 
-    def get_kinlet(self):
+    def get_kInlet(self):
        return re.split('kInlet,input,continous,',re.findall('kInlet,input,continous,.*',self.contents)[0])[1]
 
-    def set_kinlet(self,kinlet):
+    def set_kInlet(self,kinlet):
         kin_string= 'kInlet,input,continous,'+ str(kinlet)
         self.contents=re.sub('kInlet,input,continous,.*',kin_string,self.contents)
     
-    def get_omegainlet(self):
+    def get_omegaInlet(self):
        return re.split('omegaInlet,input,continuous,',re.findall('omegaInlet,input,continuous,.*',self.contents)[0])[1]
 
-    def set_omegainlet(self,olet):
+    def set_omegaInlet(self,olet):
         oin_string= 'omegaInlet,input,continuous,'+ str(olet)
         self.contents=re.sub('omegaInlet,input,continuous,.*',oin_string,self.contents)
 

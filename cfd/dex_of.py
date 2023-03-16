@@ -20,6 +20,7 @@ import logging
 import subprocess
 import re
 import argparse
+from dexof_config_getsetter import *
 
 class run_openfoam():
   def __init__(self, dexfile):
@@ -315,19 +316,37 @@ class run_openfoam():
     subprocess.check_output(cmd, shell=True)
 
 
+class prepare_dexfile(getset_dex_file):
+    def __init__(self,dexfile_loc):
+        super().__init__(dexfile_loc)
+    
+    def set_dexof_parameters(self,config_data):
+       print('dexfile loc:',self.filename)
+       print('config data is:',config_data["foam_config"])
+       for key, value in config_data["foam_config"].items():
+           print(key, value)
+           method_name= 'set_'+str(key)
+           method=getattr(self,method_name)
+           print('method is:',method)
+           method(value)
+       with open(self.filename, 'w') as f:
+           f.write(self.contents)
+        
+
 
 if __name__ == "__main__":
+    with open('input_config.json', 'r') as f:
+      data = json.load(f)
+    
     parser = argparse.ArgumentParser(description="CFD simulation using openFoam")
     parser.add_argument("-d","--dexfile", type=str, default='rough_mesh_2cores.dex',help="dex of config file location")
     #parser.add_argument("-s","--stl", type=str, default='seaglider.stl', help="stl file location")
- 
-    f = open ('input_cofig.json', "r")
-  
-    # Reading from file
-    data = json.loads(f.read())
-    print('data is:',data)
-
     args = parser.parse_args()
-    dexfile = args.dexfile
-    foam_sim= run_openfoam(dexfile)
+    dex_source_loc = args.dexfile
+
+    dex_file_editor= prepare_dexfile(dex_source_loc)
+    dex_file_editor.set_dexof_parameters(data)
+    
+
+    foam_sim= run_openfoam(dex_source_loc)
     foam_sim.run()

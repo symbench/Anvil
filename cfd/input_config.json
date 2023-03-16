@@ -1,6 +1,6 @@
 {
-	"foam_config": [{
-		"casefoldername": "UUV_aoa0_core32",
+	"foam_config": {
+		"casefoldername": "Seaglider_aoa0_core32",
 		"maxiter": 500,
 		"infile": "seaglider.stl",
 		"aoa": 0,
@@ -8,5 +8,5 @@
 		"kinematic_viscosity": 1.736124635e-6,
 		"kInlet": 0.01,
 		"omegaInlet": 57
-	}]
+	}
 }
