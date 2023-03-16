@@ -6,7 +6,7 @@
 # Release 0.1
 ####################################
 
-#Edited and modifeed by Vardhan Harsh (as part of Symbench project)
+#Edited and modifed by Vardhan Harsh (as part of Symbench project)
 
 import numpy as np
 import stl
@@ -322,9 +322,12 @@ class prepare_dexfile(getset_dex_file):
     
     def set_dexof_parameters(self,config_data):
        for key, value in config_data["foam_config"].items():
-           method_name= 'set_'+str(key)
-           method=getattr(self,method_name)
-           method(value)
+           if key =="meshsize":
+             continue
+           else:
+             method_name= 'set_'+str(key)
+             method=getattr(self,method_name)
+             method(value)
        with open(self.filename, 'w') as f:
            f.write(self.contents)
         

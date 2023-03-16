@@ -7,6 +7,7 @@
 		"Uinlet": 1.0,
 		"kinematic_viscosity": 1.736124635e-6,
 		"kInlet": 0.01,
-		"omegaInlet": 57
+		"omegaInlet": 57,
+                "meshsize":0.5
 	}
 }
