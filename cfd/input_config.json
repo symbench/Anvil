@@ -1,8 +1,8 @@
 {
 	"foam_config": {
-		"casefoldername": "Seaglider_aoa0_core32",
+		"casefoldername": "Seaharrier",
 		"maxiter": 500,
-		"infile": "seaglider.stl",
+		"infile": "/home/hv/Downloads/dex_of_wip/Anvil/UUV-test.stl",
 		"aoa": 0,
 		"Uinlet": 1.0,
 		"kinematic_viscosity": 1.736124635e-6,

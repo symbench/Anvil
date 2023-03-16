@@ -6,7 +6,7 @@
 *** Syntax: ParameterName,,,ParameterValue
 *** All lines without * in front are parameters
 *** Example:
-*** casefoldername,input,string,Seaglider_aoa0_core32
+*** casefoldername,input,string,Seaharrier
 *** line.split(',')[0] --> parameter Name
 *** line.split(',')[-1] --> Parameter Value
 ****
@@ -16,7 +16,7 @@
 *** RUN CONTROL PARAMETERS
 ***
 ***
-casefoldername,input,string,Seaglider_aoa0_core32
+casefoldername,input,string,Seaharrier
 runopenfoam,input,string,yes
 backgroundof,input,string,no
 kOmegaTol,input,continuous,1e-7
@@ -25,7 +25,7 @@ maxiter,input,discrete,500
 ***
 *** Geometry Details
 ***
-infile,input,string,seaglider.stl
+infile,input,string,/home/hv/Downloads/dex_of_wip/Anvil/UUV-test.stl
 outfile,input,string,UUV-0.stl
 aoa,input,continuous,0
 **reference area for lift and drag calculation, and reference length for moment

@@ -321,13 +321,9 @@ class prepare_dexfile(getset_dex_file):
         super().__init__(dexfile_loc)
     
     def set_dexof_parameters(self,config_data):
-       print('dexfile loc:',self.filename)
-       print('config data is:',config_data["foam_config"])
        for key, value in config_data["foam_config"].items():
-           print(key, value)
            method_name= 'set_'+str(key)
            method=getattr(self,method_name)
-           print('method is:',method)
            method(value)
        with open(self.filename, 'w') as f:
            f.write(self.contents)
