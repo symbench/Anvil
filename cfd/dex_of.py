@@ -320,7 +320,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="CFD simulation using openFoam")
     parser.add_argument("-d","--dexfile", type=str, default='rough_mesh_2cores.dex',help="dex of config file location")
     #parser.add_argument("-s","--stl", type=str, default='seaglider.stl', help="stl file location")
-
+ 
+    f = open ('input_cofig.json', "r")
+  
+    # Reading from file
+    data = json.loads(f.read())
+    print('data is:',data)
 
     args = parser.parse_args()
     dexfile = args.dexfile
