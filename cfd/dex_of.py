@@ -322,8 +322,11 @@ class prepare_dexfile(getset_dex_file):
     
     def set_dexof_parameters(self,config_data):
        for key, value in config_data["foam_config"].items():
-           if key =="meshsize":
-             continue
+           if key =="meshing":
+             if value=='self':
+               self.setall_mesh(config_data["foam_config"]["meshsize"])
+           elif key=="meshsize":
+               continue
            else:
              method_name= 'set_'+str(key)
              method=getattr(self,method_name)
@@ -337,6 +340,14 @@ if __name__ == "__main__":
     with open('input_config.json', 'r') as f:
       data = json.load(f)
     
+    for key, value in data["foam_config"].items():
+           if key =="meshing":
+             if value=='self':
+                   pass
+             elif value=='auto':
+                   pass
+             #to do : add convergence function ---- if we need mesh-independent result
+ 
     parser = argparse.ArgumentParser(description="CFD simulation using openFoam")
     parser.add_argument("-d","--dexfile", type=str, default='rough_mesh_2cores.dex',help="dex of config file location")
     #parser.add_argument("-s","--stl", type=str, default='seaglider.stl', help="stl file location")
