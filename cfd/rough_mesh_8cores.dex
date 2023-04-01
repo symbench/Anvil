@@ -6,7 +6,7 @@
 *** Syntax: ParameterName,,,ParameterValue
 *** All lines without * in front are parameters
 *** Example:
-*** casefoldername,input,string,UUV_aoa0_core32
+*** casefoldername,input,string,Seaharrier
 *** line.split(',')[0] --> parameter Name
 *** line.split(',')[-1] --> Parameter Value
 ****
@@ -16,7 +16,7 @@
 *** RUN CONTROL PARAMETERS
 ***
 ***
-casefoldername,input,string,UUV_aoa0_core32
+casefoldername,input,string,Seaharrier
 runopenfoam,input,string,yes
 backgroundof,input,string,no
 kOmegaTol,input,continuous,1e-7
@@ -27,7 +27,7 @@ maxiter,input,discrete,500
 ***
 infile,input,string,seaglider.stl
 outfile,input,string,UUV-0.stl
-aoa,input,continuous,1.0
+aoa,input,continuous,0
 **reference area for lift and drag calculation, and reference length for moment
 **calculation can be manually defined. If not given, the projected areas normal
 **to lift and drag direction, respectively, will be used
@@ -47,12 +47,12 @@ computegrid,input,string,(4 2 1)
 ***
 *** Flow Characteristics
 ***
-Uinlet,input,continuous,1.22
-kinematic_viscosity,input,continuous,1.736124635e-6
+Uinlet,input,continuous,1.0
+kinematic_viscosity,input,continuous,1.736124635e-06
 density,input,continous,1027.0
 *** Turbulence parameters (these parameters are optional and will be estimated if not given)
-**kInlet,input,continous,0.000001
-**omegaInlet,input,continuous,1.
+**kInlet,input,continous,0.01
+**omegaInlet,input,continuous,57
 **omegaWall,input,continuous,1.
 **kWall,input,continuous,0.
 ***

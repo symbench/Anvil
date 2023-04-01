@@ -5,7 +5,6 @@
 # December 13 - 2021
 # Release 0.1
 ####################################
-
 #Edited and modifed by Vardhan Harsh (as part of Symbench project)
 
 import numpy as np
@@ -28,6 +27,20 @@ class run_openfoam():
    
 
   def dex2dict(self,filename):
+    """
+    Prints the person's name and age.
+
+    If the argument 'additional' is passed, then it is appended after the main info.
+
+    Parameters
+    ----------
+    additional : str, optional
+    More info to be displayed (default is None)
+
+    Returns
+    -------
+    None
+    """
     # lame version of dex parser to extract what's needed
     with open(filename) as file:
         lines = file.readlines()
@@ -314,6 +327,7 @@ class run_openfoam():
     tail -50 log.simpleFoam | grep "Cs       :" |head -1 >> results.log
     '''
     subprocess.check_output(cmd, shell=True)
+    return case_folder
 
 
 class prepare_dexfile(getset_dex_file):
@@ -333,10 +347,56 @@ class prepare_dexfile(getset_dex_file):
              method(value)
        with open(self.filename, 'w') as f:
            f.write(self.contents)
+   
+    def set_dexof_parameters_mesh(self,config_data,mesh):
+       for key, value in config_data["foam_config"].items():
+           if key =="meshing":
+              if value=='auto':
+                self.setall_mesh(mesh)
+           elif key=="meshsize":
+               continue
+           else:
+             method_name= 'set_'+str(key)
+             method=getattr(self,method_name)
+             method(value)
+       with open(self.filename, 'w') as f:
+           f.write(self.contents)
+
+ 
+   
         
+class read_results():
+     def __init__(self,directory):
+          self.default_max=1e6
+          self.result_dir= directory
+     
+     def read_dragforce(self):
+       try:
+         #reading results from folder
+         src_resultfile=self.result_dir+'/results.log'
+         with open(src_resultfile, 'r') as f:
+           result_output=f.read()
+    
+         Fd_out=re.search(r"Total\s+:\s*\(\s*\d*\.\d*",result_output)
+         if Fd_out: 
+           Fd_found = Fd_out.group(0).split(': (')[1]
+           Fd_found= float(Fd_found)
+         else: 
+           Fd_found= self.default_max
+         if Fd_found==0: 
+           Fd_found=self.default_max
+
+         print('Drag force is:', Fd_found)
+         return Fd_found
+       except:
+         print("An exception occurred- Missing result file") 
+
+
+
 
 
 if __name__ == "__main__":
+    default_max=1e6
     with open('input_config.json', 'r') as f:
       data = json.load(f)
     
@@ -346,17 +406,34 @@ if __name__ == "__main__":
                    pass
              elif value=='auto':
                    pass
-             #to do : add convergence function ---- if we need mesh-independent result
+             #to do : add convergence based adaptive meshing ---- if we need mesh-independent result
  
     parser = argparse.ArgumentParser(description="CFD simulation using openFoam")
     parser.add_argument("-d","--dexfile", type=str, default='rough_mesh_2cores.dex',help="dex of config file location")
     #parser.add_argument("-s","--stl", type=str, default='seaglider.stl', help="stl file location")
-    args = parser.parse_args()
+    args = parser.parse_args()    
     dex_source_loc = args.dexfile
-
+    print('dex source loc:', dex_source_loc)
     dex_file_editor= prepare_dexfile(dex_source_loc)
-    dex_file_editor.set_dexof_parameters(data)
-    
-
     foam_sim= run_openfoam(dex_source_loc)
-    foam_sim.run()
+    
+    for key, value in data["foam_config"].items():
+           if key =="meshing":
+             if value=='self':
+                dex_file_editor.set_dexof_parameters(data)
+                result_folder=foam_sim.run()
+                _result_reader_= read_results(result_folder)
+                Fd= _result_reader_.read_dragforce()
+             elif value=='auto':
+                alt_mesh=[0.5,0.4, 0.3,0.25,0.2,0.15,0.1,0.08,0.06,0.05,0.02,0.01,0.005] 
+                for _mesh_ in alt_mesh:
+                    dex_file_editor.set_dexof_parameters_mesh(data,_mesh_)                    
+                    result_folder=foam_sim.run()
+                    _result_reader_= read_results(result_folder)
+                    Fd= _result_reader_.read_dragforce()
+                    print('mesh size is {} and found drag force is {}'.format(_mesh_,Fd))
+                    if (Fd<default_max):
+                       break
+
+             #to do : add convergence based adaptive meshing ---- if we need mesh-independent result
+   
