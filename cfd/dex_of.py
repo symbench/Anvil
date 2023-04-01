@@ -22,25 +22,49 @@ import argparse
 from dexof_config_getsetter import *
 
 class run_openfoam():
+  """
+  A class to configure and run openfoam for computational fluid dynamic analysis.
+
+  ...
+
+  Attributes
+  ----------
+  dexfile : str
+         first name of the person
+  
+  Methods
+  -------
+  dex2dict(filename=""):
+      Prints the person's name and age.
+  """
+
+  
   def __init__(self, dexfile):
+    """
+    Constructs the necessary attributes for the openfoam object.
+
+    Parameters
+    ----------
+    dexfile : str, the location of dexof file 
+               
+    """ 
+   
     self.dexfile= dexfile 
    
 
   def dex2dict(self,filename):
     """
-    Prints the person's name and age.
-
-    If the argument 'additional' is passed, then it is appended after the main info.
+    Parse the dexof file to find relevant paramters and store in dictionary
 
     Parameters
     ----------
-    additional : str, optional
-    More info to be displayed (default is None)
+    filename : str, the dexof file name (No default value, user must provide it)
 
     Returns
     -------
-    None
+    dictionary representation of relevant dex parameters
     """
+
     # lame version of dex parser to extract what's needed
     with open(filename) as file:
         lines = file.readlines()
