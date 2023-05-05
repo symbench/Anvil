@@ -1,9 +1,14 @@
+from utils import *
+add_freecad_libs_to_path()
+
 import FreeCAD  
 import Mesh
 import numpy as np
 from FreeCAD import Units  
 import Spreadsheet
 import json
+
+
 
 class CAD_asset(object):
     """
@@ -12,25 +17,39 @@ class CAD_asset(object):
 
     def __init__(self, filename: str, param_dictionary:dict):
         """
-        Creates a pressure vessel analysis class that can be used to run
+        Creates a CAD asset that can be used to run
         multiple simulations for the given design template by changing its
         parameters.
         """
         self.filename = filename
-       
-
         print("Opening:", filename)
         self.doc = FreeCAD.open(filename)
         self.sheet = self.doc.getObjectsByLabel('Parameters')[0]
         
-        print('***Parametric properties are:***')
+        #print('***Parametric properties are:***',dir(self.sheet))
         
         par_variables= list(vars(self.sheet).keys())
-        input_param= list(param_dictionary['fea_param'].keys())
-        print('-> paramters variables are:',par_variables)
-        print('-> Input dictionary is:', input_param)
-        assert  all(x in par_variables for x in input_param)
-        self.param_dict = param_dictionary
+        
+        #geerating list of variables A1-A100.
+        placeholder_cells = ["A"+str(n+1) for n in range(100)] 
+        
+        #finding how many are there in CAD drawing
+        cells=list(set(placeholder_cells).intersection(par_variables))
+        print('-->cells:',cells)
+        self.cad_variables=[self.sheet.get(cell) for cell in cells]
+        
+        
+        self.input_param= list(param_dictionary['fea_param'].keys())
+        self.input_param_values= list(param_dictionary['fea_param'].values())
+        
+        try:
+         assert  all(x in self.cad_variables for x in self.input_param)
+        except AssertionError:
+         print('!!!!Variable name mismatch between config file and CAD seed design!!!')
+         print('CAD parameters are:{},\n Config file variables are:{}'.format(self.cad_variables,self.input_param))
+         sys.exit()
+          
+        print('Didnt exit')
         
 
     def set_parameter(self):
@@ -82,9 +101,9 @@ class CAD_asset(object):
          stl_dumpfile=location+"anvil"+_name+".stl"
          print('stl dump is:',stl_dumpfile)
          print('--> Current working dir:',os.getcwd())
-         stl_name= u"./stl_repo/fishiefish.stl"
+         stl_name= u"../stl_repo/fishiefish.stl"
          
-         Mesh.export([__objs__], 'u'+stl_dumpfile)
+         #Mesh.export([__objs__], 'u'+stl_dumpfile)
          Mesh.export([__objs__], stl_name)
          del __objs__    
         except:

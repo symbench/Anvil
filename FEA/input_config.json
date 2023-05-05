@@ -1,8 +1,8 @@
 {
 	"fea_param": {
-		"tail1_y": 20,
-		"tail2_y": 50,
-		"tail3_y": 25,
-		"tail4_y": 10
+		"Tail1_y": 20,
+		"Tail2_y": 50,
+		"Tail3_y": 25,
+		"Tail4_y": 10
 	}
 }
