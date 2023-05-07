@@ -1,0 +1,120 @@
+/*--------------------------------*- C++ -*----------------------------------*| =========                 |                                                 |
+| \      /  F ield         | OpenFOAM: The Open Source CFD Toolbox           |
+|  \    /   O peration     | Version:  v2006                                 |
+|   \  /    A nd           | Website:  www.openfoam.com                      |
+|    \/     M anipulation  |                                                 |
+*---------------------------------------------------------------------------*/
+
+
+forceCoeffs_cl
+{
+    type                forceCoeffs;
+    libs            ( "libforces.so" );
+	writeControl    timeStep;
+
+	writeInterval   100;
+
+    patches             ( "airfoil.*" );
+
+	// Optional entries
+
+    // Field names
+    p               p;
+    U               U;
+    rho             rhoInf;
+
+    // Reference pressure [Pa]
+    //pRef            0;
+
+    // Include porosity effects?
+    porosity        no;
+
+    // Store and write volume field representations of forces and moments
+    writeFields     yes;
+
+    // Centre of rotation for moment calculations
+    CofR            (0 0 0);
+
+    // Freestream velocity magnitude [m/s]
+    magUInf         1.0;
+
+	rhoInf			1027.0;
+
+    liftDir             (0 1 0);
+    dragDir             (1 0 0);
+    CofR                (0 0 0);
+    pitchAxis           (0 0 1);
+
+    lRef                2.233815;
+    Aref                0.5400591775319927;
+}
+
+
+forceCoeffs_cd
+{
+    type                forceCoeffs;
+    libs            ( "libforces.so" );
+	writeControl    timeStep;
+
+	writeInterval   100;
+
+    patches             ( "airfoil.*" );
+
+	// Optional entries
+
+    // Field names
+    p               p;
+    U               U;
+    rho             rhoInf;
+
+    // Reference pressure [Pa]
+    //pRef            0;
+
+    // Include porosity effects?
+    porosity        no;
+
+    // Store and write volume field representations of forces and moments
+    writeFields     no;
+
+    // Centre of rotation for moment calculations
+    CofR            (0 0 0);
+
+    // Freestream velocity magnitude [m/s]
+    magUInf         1.0;
+
+	rhoInf			1027.0;
+
+    liftDir             (0 1 0);
+    dragDir             (1 0 0);
+    CofR                (0 0 0);
+    pitchAxis           (0 0 1);
+
+    lRef                2.233815;
+    Aref                0.08402976289931663;
+}
+// ************************************************************************* //
+
+force_computation
+{
+    // Mandatory entries
+    type            forces;
+    libs            ("libforces.so");
+    patches          ( "airfoil.*" );
+    writeControl    timeStep;
+    writeInterval   100;
+
+
+    // Optional entries
+
+    // Field names
+    p               p;
+    U               U;
+    rho             rho;
+
+    // Store and write volume field representations of forces and moments
+    rho          rhoInf;
+    rhoInf       1027.0;
+
+    // Centre of rotation for moment calculations
+    CofR            (0 0 0);
+};

@@ -30,34 +30,48 @@ class CAD_asset(object):
         
         par_variables= list(vars(self.sheet).keys())
         
-        #geerating list of variables A1-A100.
+        #genrating list of variables A1-A100.
         placeholder_cells = ["A"+str(n+1) for n in range(100)] 
         
         #finding how many are there in CAD drawing
-        cells=list(set(placeholder_cells).intersection(par_variables))
-        print('-->cells:',cells)
-        self.cad_variables=[self.sheet.get(cell) for cell in cells]
+        self.cells=list(set(placeholder_cells).intersection(par_variables))
+        print('-->cells:',self.cells)
+        self.cad_variables_name=[self.sheet.get(cell) for cell in self.cells]
         
         
-        self.input_param= list(param_dictionary['fea_param'].keys())
-        self.input_param_values= list(param_dictionary['fea_param'].values())
+        
+        self.input_config_dic=param_dictionary
+        self.input_config_key= list(param_dictionary['fea_param'].keys())
+        
         
         try:
-         assert  all(x in self.cad_variables for x in self.input_param)
+         assert  all(x in self.cad_variables_name for x in self.input_config_key)
         except AssertionError:
-         print('!!!!Variable name mismatch between config file and CAD seed design!!!')
+         print('!!!! Variable name mismatch between config file and CAD seed design !!!')
          print('CAD parameters are:{},\n Config file variables are:{}'.format(self.cad_variables,self.input_param))
          sys.exit()
           
         print('Didnt exit')
         
 
+    def check_cells(self,column:str):
+         pass
+
     def set_parameter(self):
-      for key, value in self.param_dict["fea_param"].items():
+      for cell in self.cells:
        try:
-        value= str(value)+"mm"
-        print('key is:',type(key),key,'value is:',value)
-        self.sheet.set(key,value)
+        #print('cell is:',cell)
+        param_name=self.sheet.get(cell)
+        #print('param name is:',param_name,'input config param:',self.input_config_key)
+        if param_name in self.input_config_key:    
+         #print('param name is:',param_name)
+         value= self.input_config_dic['fea_param'][param_name]
+         value= str(value)+"mm"    
+         #print('value is:',value)
+         value_cell= 'B'+cell[1:]
+         self.sheet.set(value_cell,value)
+        else:
+         pass
        except: 
         print('failed in setting parameter values') 
       self.doc.recompute()
@@ -90,20 +104,22 @@ class CAD_asset(object):
         Generate stl file from the current design
 
         """
+        #print('In stl')
         try:
          __objs__=self.doc.getObject("Body")
          print(__objs__.Name, self.doc.Name)
-         _name=""
-         for key, value in self.param_dict["fea_param"].items():
-             value= str(value)+"mm"
-             print('key is:',type(key),key,'value is:',value)
-             _name=_name+'_'+key+'_'+str(value)
-         stl_dumpfile=location+"anvil"+_name+".stl"
-         print('stl dump is:',stl_dumpfile)
-         print('--> Current working dir:',os.getcwd())
+         #_name=""
+         #for key, value in self.input_config_dic["fea_param"].items():
+         #    value= str(value)+"mm"
+         #    print('key is:',type(key),key,'value is:',value)
+         #    _name=_name+'_'+key+'_'+str(value)
+         #stl_dumpfile=location+"anvil"+_name+".stl"
+         #print('stl dump is:',stl_dumpfile)
+         #print('--> Current working dir:',os.getcwd())
          stl_name= u"../stl_repo/fishiefish.stl"
-         
-         #Mesh.export([__objs__], 'u'+stl_dumpfile)
+         #stl_dumpfile= stl_dumpfile
+         #print('STL name:',stl_name,'stl-dump file name:',stl_dumpfile)
+         #Mesh.export([__objs__], stl_dumpfile)
          Mesh.export([__objs__], stl_name)
          del __objs__    
         except:
@@ -111,46 +127,6 @@ class CAD_asset(object):
     
 
 
-    def get_body_area(self):
-        """
-        Returns the body volume in square meters.
-        """
-        obj = self.doc.getObject('Body')
-        return obj.Shape.Area * 1e-6
-
-    def get_body_volume(self):
-        """
-        Returns the body volume in cubic meters.
-        """
-        obj = self.doc.getObject('Body')
-        return obj.Shape.Volume * 1e-9
-
-    def get_outer_area(self):
-        obj = self.doc.getObject('Body')
-        return obj.Shape.OuterShell.Area * 1e-6
-
-    def get_outer_volume(self):
-        obj = self.doc.getObject('Body')
-        return obj.Shape.OuterShell.Volume * 1e-3  # in cubic cm
-
-    def get_inner_area(self):
-        obj = self.doc.getObject('Body')
-        return self.get_body_area() - self.get_outer_area()
-
-    def get_inner_volume(self):
-        obj = self.doc.getObject('Body')
-        return self.get_outer_volume() - self.get_body_volume()
-
-    def clean(self):
-        """
-        Removes all temporary artifacts from the model.
-        """
-        if self.doc.getObject('CCX_Results'):
-            self.doc.removeObject('CCX_Results')
-        if self.doc.getObject('ResultMesh'):
-            self.doc.removeObject('ResultMesh')
-        if self.doc.getObject('ccx_dat_file'):
-            self.doc.removeObject('ccx_dat_file')
 
 
 

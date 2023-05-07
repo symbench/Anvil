@@ -433,7 +433,7 @@ if __name__ == "__main__":
              #to do : add convergence based adaptive meshing ---- if we need mesh-independent result
  
     parser = argparse.ArgumentParser(description="CFD simulation using openFoam")
-    parser.add_argument("-d","--dexfile", type=str, default='rough_mesh_2cores.dex',help="dex of config file location")
+    parser.add_argument("-d","--dexfile", type=str, default='rough_mesh_8cores.dex',help="dex of config file location")
     #parser.add_argument("-s","--stl", type=str, default='seaglider.stl', help="stl file location")
     args = parser.parse_args()    
     dex_source_loc = args.dexfile
