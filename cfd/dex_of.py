@@ -158,7 +158,7 @@ class run_openfoam():
     scalex = float(configdict['scalex'])
     scaley = float(configdict['scaley'])
     scalez = float(configdict['scalez'])
-
+    print('present working dir:',os.getcwd(),'Infile is:',infile)
     your_mesh = mesh.Mesh.from_file(infile)
     # decrease loglevel
     your_mesh.logger.setLevel(logging.ERROR)
@@ -181,7 +181,7 @@ class run_openfoam():
     if 'aref_lift' not in configdict:
         cmd = "parea -xz -stl " + "temp.stl"
         outpa = os.popen(cmd).read()
-        print("outpa:",outpa)
+        #print("outpa:",outpa)
         # print(lref)
         aref_lift = float(outpa.split(":")[1])
         outdict['aref_lift'] = aref_lift
@@ -326,10 +326,11 @@ class run_openfoam():
     case_folder=self.setup_of(problemdict)
     print("**** ALL DONE ****")
     # do the overwrite.
-
+    cfd_dir= os.getcwd()
     os.chdir(case_folder)
     print('present working dir:',os.getcwd())
     subprocess.run('./Allclean')
+    print('cleaning done')
     sim_out = subprocess.run('./Allrun', capture_output=True, text=True)
 
 
@@ -351,6 +352,7 @@ class run_openfoam():
     tail -50 log.simpleFoam | grep "Cs       :" |head -1 >> results.log
     '''
     subprocess.check_output(cmd, shell=True)
+    os.chdir(cfd_dir)
     return case_folder
 
 
@@ -451,6 +453,7 @@ if __name__ == "__main__":
              elif value=='auto':
                 alt_mesh=[0.5,0.4, 0.3,0.25,0.2,0.15,0.1,0.08,0.06,0.05,0.02,0.01,0.005] 
                 for _mesh_ in alt_mesh:
+                    print('mesh is:',_mesh_)       
                     dex_file_editor.set_dexof_parameters_mesh(data,_mesh_)                    
                     result_folder=foam_sim.run()
                     _result_reader_= read_results(result_folder)

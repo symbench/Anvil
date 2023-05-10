@@ -1,5 +1,5 @@
 #!/bin/bash
-source /usr/lib/openfoam/openfoam2112/etc/bashrc
+source /usr/lib/openfoam/openfoam2212/etc/bashrc
 export OMPI_MCA_btl_vader_single_copy_mechanism=none
 
 cd "${0%/*}" || exit                                # Run from this directory

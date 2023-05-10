@@ -6,7 +6,7 @@
 *** Syntax: ParameterName,,,ParameterValue
 *** All lines without * in front are parameters
 *** Example:
-*** casefoldername,input,string,Seaharrier
+*** casefoldername,input,string,seaglider
 *** line.split(',')[0] --> parameter Name
 *** line.split(',')[-1] --> Parameter Value
 ****
@@ -16,7 +16,7 @@
 *** RUN CONTROL PARAMETERS
 ***
 ***
-casefoldername,input,string,Seaharrier
+casefoldername,input,string,seaglider
 runopenfoam,input,string,yes
 backgroundof,input,string,no
 kOmegaTol,input,continuous,1e-7
@@ -26,21 +26,15 @@ maxiter,input,discrete,500
 *** Geometry Details
 ***
 infile,input,string,seaglider.stl
-outfile,input,string,UUV-0.stl
+outfile,input,string,seaglider_out.stl
 aoa,input,continuous,0
-**reference area for lift and drag calculation, and reference length for moment
-**calculation can be manually defined. If not given, the projected areas normal
-**to lift and drag direction, respectively, will be used
-**aref_drag,input,continuous,1
-**aref_lift,input,continuous,1
-**lref,input,continuous,1
 ***
 *** if the stl file needs to be scaled.
 scalex,input,continuous,0.001
 scaley,input,continuous,0.001
 scalez,input,continuous,0.001
 ***
-*** Computational Grid -- meshing/solution is run on 32 cores
+*** Computational Grid -- meshing/solution is run on 8 cores
 ***
 subdomains,input,discrete,8
 computegrid,input,string,(4 2 1)
@@ -50,11 +44,8 @@ computegrid,input,string,(4 2 1)
 Uinlet,input,continuous,1.0
 kinematic_viscosity,input,continuous,1.736124635e-06
 density,input,continous,1027.0
-*** Turbulence parameters (these parameters are optional and will be estimated if not given)
-**kInlet,input,continous,0.01
-**omegaInlet,input,continuous,57
-**omegaWall,input,continuous,1.
-**kWall,input,continuous,0.
+kInlet,input,continous,0.01
+omegaInlet,input,continuous,57
 ***
 ** Meshing details (cell sizes in meters)
 ** Domain Size scaling -- the domain size will be N times the UUV size in front of the domain
@@ -77,8 +68,4 @@ cellSizeZ,input,continuous,0.5
 maxLocalCells,input,discrete,10000
 maxGlobalCells,input,discrete,1000000
 nsurfacelayers,input,discrete,2
-**this defines the minimum and maximum cell refinement on the model surface --> refinement level (n m)
-**results in a maximum cell size of cellSize/2^n and a minimum cell size of cellSize/2^m on the
-**model surface
-refinementLevel,input,string,(4 6)
 ***
