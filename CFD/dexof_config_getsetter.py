@@ -59,6 +59,14 @@ class getset_dex_file():
         uin_string= 'Uinlet,input,continuous,'+ str(uinlet)
         self.contents=re.sub('Uinlet,input,continuous,.*',uin_string,self.contents)
 
+    def get_density(self):
+       return re.split('density,input,continuous,',re.findall('density,input,continuous,.*',self.contents)[0])[1]
+
+    def set_density(self,density_f):
+        dense_string= 'density,input,continuous,'+ str(density_f)
+        self.contents=re.sub('density,input,continuous,.*',dense_string,self.contents)
+        
+    
     def get_kinematic_viscosity(self):
        return re.split('kinematic_viscosity,input,continuous,',re.findall('kinematic_viscosity,input,continuous,.*',self.contents)[0])[1]
 
@@ -75,6 +83,7 @@ class getset_dex_file():
     
     def get_omegaInlet(self):
        return re.split('omegaInlet,input,continuous,',re.findall('omegaInlet,input,continuous,.*',self.contents)[0])[1]
+
 
     def set_omegaInlet(self,olet):
         oin_string= 'omegaInlet,input,continuous,'+ str(olet)

@@ -43,7 +43,7 @@ computegrid,input,string,(4 2 1)
 ***
 Uinlet,input,continuous,1.0
 kinematic_viscosity,input,continuous,1.736124635e-06
-density,input,continous,1027.0
+density,input,continuous,1.225
 kInlet,input,continous,0.01
 omegaInlet,input,continuous,57
 ***
