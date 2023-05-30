@@ -1,15 +1,15 @@
 {
 	"foam_config": {
-		"casefoldername": "seaglider",
+		"casefoldername": "ST-USS_ENTERPRISE",
 		"maxiter": 500,
-		"infile": "../stl_repo/fishiefish.stl",
+		"infile": "../experiments/simulation/ST-USS_ENTERPRISE.stl",
 		"aoa": 0,
-		"Uinlet": 1.0,
-		"kinematic_viscosity": 1.736124635e-6,
-		"kInlet": 0.01,
+		"Uinlet": 200.0,
+		"kinematic_viscosity": 0.000362,
+		"kInlet": 0.06,
 		"density":1.225,
-		"omegaInlet": 57,
-    "meshing":"auto",
-    "meshsize":0.1
+		"omegaInlet":25.55,
+    "meshing":"self",
+    "meshsize":0.2
 	}
 }

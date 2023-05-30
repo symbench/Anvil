@@ -181,7 +181,7 @@ class run_openfoam():
     if 'aref_lift' not in configdict:
         cmd = "parea -xz -stl " + "temp.stl"
         outpa = os.popen(cmd).read()
-        #print("outpa:",outpa)
+        print("****outpa:",outpa)
         # print(lref)
         aref_lift = float(outpa.split(":")[1])
         outdict['aref_lift'] = aref_lift
@@ -189,6 +189,7 @@ class run_openfoam():
     if 'aref_drag' not in configdict:
         cmd = "parea -yz -stl " + "temp.stl"
         outpa = os.popen(cmd).read()
+        print("^^^^outpa:",outpa, 'splitted outpa:',outpa.split(":"))
         aref_drag = float(outpa.split(":")[1])
         outdict['aref_drag'] = aref_drag
 
