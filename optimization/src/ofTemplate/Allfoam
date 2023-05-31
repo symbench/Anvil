@@ -1,0 +1,61 @@
+#!/bin/bash
+source /usr/lib/openfoam/openfoam2112/etc/bashrc
+export OMPI_MCA_btl_vader_single_copy_mechanism=none
+
+cd "${0%/*}" || exit                                # Run from this directory
+. ${WM_PROJECT_DIR:?}/bin/tools/RunFunctions        # Tutorial run functions
+#------------------------------------------------------------------------------
+
+# Alternative decomposeParDict name:
+decompDict="-decomposeParDict system/decomposeParDict.6"
+## Standard decomposeParDict name:
+# unset decompDict
+
+date
+# echo "***Feature Extraction***"
+# runApplication surfaceFeatureExtract
+#
+# echo "***Block meshing ***"
+# runApplication blockMesh
+#
+# echo "***Decomposing  Subdomains  ***"
+# runApplication $decompDict decomposePar
+#
+#
+# echo "***Parallel Meshing   ***"
+# runParallel $decompDict snappyHexMesh -overwrite
+
+echo "**** Skipping Snappy ****"
+#echo "***Toposet   ***"
+#runParallel $decompDict topoSet
+
+#- For non-parallel running: - set the initial fields
+# restore0Dir
+
+echo "*** Restoring Initial Fields   ***"
+#- For parallel running: set the initial fields
+restore0Dir -processor
+
+#runParallel $decompDict patchSummary
+
+#runParallel $decompDict potentialFoam -writephi
+
+#runParallel $decompDict checkMesh -writeFields '(nonOrthoAngle)' -constant
+
+#runParallel $decompDict $(getApplication)
+echo "*** Running Simple Foam   ***"
+runParallel $decompDict  simpleFoam
+echo "*** Reconstructing the mesh sub-domains   ***"
+runApplication reconstructParMesh -constant
+echo "*** Reconstructing final solution   ***"
+runApplication reconstructPar -latestTime
+
+touch a.foam
+echo "---Mesh Size---"
+grep "Layer mesh :" log.snappyHexMesh
+echo "--- CPU Timings---"
+grep "Finished Meshing" log.snappyHexMesh
+tail -24 log.simpleFoam
+date
+echo "****** ALL DONE ******"
+#------------------------------------------------------------------------------
