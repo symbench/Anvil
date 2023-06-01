@@ -111,7 +111,7 @@ if __name__=='__main__':
      mode= data["mode"]
      print("**Mode is:",mode)
      
-     if mode=="	optimization":
+     if mode=="optimization":
         optimization_method= data["optimizer"]["method"]
         aq_func= data["optimizer"]["aquisition"]  
         
@@ -153,6 +153,9 @@ if __name__=='__main__':
        print('ds is:',ds, 'its shape is',ds.shape[0])
        for i in range(ds.shape[0]): 	
           fd=run_cad_cfd(ds[i].reshape(1,-1))
+     elif mode=="cfd_eval":
+        drag=run_cfd()
+        print('Drag is:',drag)
      else:
        Print("!!Enter mode of operation is not known!!")
 	
