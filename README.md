@@ -1,15 +1,15 @@
 # Anvil
 An open-source SciML tool for CFD-based design evaluator integrated with AI-based optimization algorithms and data generation capability for training and  surrogate modeling. For this end we used two domain specific engineering tools:
-a. OpenFOAM : A CFD analysis tool
-b. FreeCAD : A CAD design tool
-Apart form engineering tools, we integrated data science and AI tools in unison that may be useful for scientific Machine Learning efforts.
+- OpenFOAM : A CFD analysis tool
+- FreeCAD : A CAD design tool
+- Apart form engineering tools, we integrated data science and AI tools in unison that may be useful for scientific Machine Learning efforts.
 
 The Anvil tool works in three mode:
 1. Run the CFD analysis on a single STL file : On a given configuration file, and STL of the design, the tool runs the CFD analysis and store the result.  User does not need to go into the details of understanding the OpenFOAM and its settings. The experiment setting is provided by user in JSON configuration file and rest is taken care by the tool.
 2. Data generation mode: On a given parametric CAD seed design, design space and budget of evaluation , the CFD outcome data is generated and stored . This may be useful in studying effect of changes in shape on the drag or lift values or creating a low fidelity surrogate model for the CFD process in context of the design. The data generation process is completely automatic. On a give budget, User can choose the kind of sampling method and let the experiment run automatically and store the data.  
 3. Optimization mode: In this mode, the AI-based optimization method called Bayesian optimization (BO) is run with user defined acquisition function. BO is highly sample efficient so it is the perfect choice in this setting due to expensive to evaluate CFD analysis.
 
-Both 'data generation' and 'optimization' modes are automatic that speed up the scientific work.  
+Both 'data generation' and 'optimization' modes are automatic that can speed up the scientific work.  
 
 ## Installation requirement:
 Operating system: Ubuntu : 20.04
