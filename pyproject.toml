@@ -54,7 +54,7 @@ repository = "https://github.com/symbench/Anvil"
 
 # Entrypoint
 [project.scripts]
-anvil = "anvil.__main__:run"
+anvil = "anvil.__main__:main"
 
 [build-system]
 requires = ["setuptools", "wheel"]

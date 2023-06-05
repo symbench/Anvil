@@ -61,7 +61,7 @@ class AnvilConfig(BaseModel):
     )
 
     @classmethod
-    def from_json(cls, file_loc: str):
+    def from_file(cls, file_loc: str):
         file_loc = Path(file_loc).resolve()
 
         with open(file_loc, "r") as f:

@@ -6,7 +6,7 @@ from anvil.tests.utils import get_test_file_path
 class TestConfig(BaseTest):
     def test_basic_data_generation_config(self):
         datagen_config = get_test_file_path("datagen.json")
-        config = AnvilConfig.from_json(datagen_config)
+        config = AnvilConfig.from_file(datagen_config)
         assert config.mode == "data_generation"
         assert config.seed_cad == "../usr_input/param_UUV_hull.FCStd"
         assert config.cad_param == {
