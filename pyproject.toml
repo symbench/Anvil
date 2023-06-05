@@ -42,7 +42,10 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = []
+test = [
+    "pytest",
+    "pre-commit"
+]
 
 [project.urls]
 homepath = "https://github.com/symbench/Anvil"

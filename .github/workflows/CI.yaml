@@ -1,0 +1,40 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  RUNNING_ON_GA: GA
+
+jobs:
+  test-orchestrator:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+
+    # The process
+    steps:
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        id: cp39
+        with:
+          python-version: 3.9
+
+      - uses: actions/checkout@v3
+        name: Checkout Code
+
+      - name: Install Anvil
+        run: |
+          ${{ steps.cp39.outputs.python-path }} -m pip install -e .
+
+      - name: Perform Tests (${{ matrix.os }})
+        run: |
+          ${{ steps.cp39.outputs.python-path }} -m pytest -v --color yes anvil/tests
