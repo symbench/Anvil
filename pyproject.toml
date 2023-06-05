@@ -37,7 +37,9 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
-dependencies = []
+dependencies = [
+    "pydantic"
+]
 
 [project.optional-dependencies]
 test = []
