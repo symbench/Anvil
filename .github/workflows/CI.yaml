@@ -12,7 +12,7 @@ env:
   RUNNING_ON_GA: GA
 
 jobs:
-  test-orchestrator:
+  test-anvil:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     strategy:
@@ -33,7 +33,7 @@ jobs:
 
       - name: Install Anvil
         run: |
-          ${{ steps.cp39.outputs.python-path }} -m pip install -e .
+          ${{ steps.cp39.outputs.python-path }} -m pip install -e ".[test]"
 
       - name: Perform Tests (${{ matrix.os }})
         run: |
