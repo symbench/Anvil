@@ -10,16 +10,20 @@ logger = get_logger(__name__)
 
 
 class CADAsset(object):
-    """
-    The base class to work with parametric pressure vessel models.
+    """The base class to work with parametric pressure vessel models.
+
+    This class creates a CAD asset that can be used to run multiple simulations
+    for the given design template by changing its parameters.
+
+    Parameters
+    ----------
+    filename: str
+        The path to the CAD file.
+    param_dictionary: Dict[str, float]
+        The dictionary of parameters to use for the CAD file.
     """
 
     def __init__(self, filename: str, param_dictionary: Dict[str, float]):
-        """
-        Creates a CAD asset that can be used to run
-        multiple simulations for the given design template by changing its
-        parameters.
-        """
         self.filename = filename
 
         self.doc = FreeCAD.open(filename)
@@ -34,7 +38,7 @@ class CADAsset(object):
 
         # finding how many are there in CAD drawing
         self.cells = list(set(placeholder_cells).intersection(par_variables))
-        logger.info("-->cells:", self.cells)
+        logger.info(f"-->cells:, {self.cells}")
         self.cad_variables_name = [self.sheet.get(cell) for cell in self.cells]
 
         self.input_config_dic = param_dictionary
