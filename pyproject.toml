@@ -44,7 +44,14 @@ dependencies = [
 [project.optional-dependencies]
 test = [
     "pytest",
-    "pre-commit"
+    "pre-commit",
+    "mkdocs",
+    "mkdocs-material",
+]
+
+docs = [
+    "mkdocs",
+    "mkdocs-material",
 ]
 
 [project.urls]

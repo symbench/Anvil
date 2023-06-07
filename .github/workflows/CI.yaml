@@ -43,3 +43,8 @@ jobs:
       - name: Perform Tests (${{ matrix.os }})
         run: |
           ${{ steps.cp39.outputs.python-path }} -m pytest -v --color yes anvil/tests
+
+      - name: Deploy Docs
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
