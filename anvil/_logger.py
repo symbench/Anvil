@@ -33,4 +33,5 @@ def configure_logging():
 
 
 def get_logger(name) -> logging.Logger:
+    configure_logging()
     return logging.getLogger(name)

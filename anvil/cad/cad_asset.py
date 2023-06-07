@@ -1,5 +1,6 @@
 import sys
-from typing import Dict
+from pathlib import Path
+from typing import Dict, Union
 
 import FreeCAD
 import Mesh
@@ -7,6 +8,8 @@ import Mesh
 from anvil._logger import get_logger
 
 logger = get_logger(__name__)
+
+SPREADSHEET_LABEL = "Spreadsheet"
 
 
 class CADAsset(object):
@@ -23,13 +26,13 @@ class CADAsset(object):
         The dictionary of parameters to use for the CAD file.
     """
 
-    def __init__(self, filename: str, param_dictionary: Dict[str, float]):
+    def __init__(
+        self, filename: str, param_dictionary: Dict[str, float]
+    ) -> None:
         self.filename = filename
 
         self.doc = FreeCAD.open(filename)
-        self.sheet = self.doc.getObjectsByLabel("Spreadsheet")[0]
-
-        logger.info(f"***Parametric properties are:***, {dir(self.sheet)}")
+        self.sheet = self.doc.getObjectsByLabel(SPREADSHEET_LABEL)[0]
 
         par_variables = list(vars(self.sheet).keys())
 
@@ -38,13 +41,13 @@ class CADAsset(object):
 
         # finding how many are there in CAD drawing
         self.cells = list(set(placeholder_cells).intersection(par_variables))
-        logger.info(f"-->cells:, {self.cells}")
         self.cad_variables_name = [self.sheet.get(cell) for cell in self.cells]
+        logger.debug(f"Parametric properties are: {self.cad_variables_name}")
 
         self.input_config_dic = param_dictionary
-        logger.info(f"param dict: {param_dictionary}")
+        logger.debug(f"param dict: {param_dictionary}")
         self.input_config_key = list(param_dictionary.keys())
-        logger.info(f"input keys: {self.input_config_key}")
+        logger.debug(f"input keys: {self.input_config_key}")
 
         try:
             assert all(
@@ -72,28 +75,24 @@ class CADAsset(object):
                     value = self.input_config_dic[param_name]
                     value = str(value) + "mm"
                     value_cell = "B" + cell[1:]
+                    logger.debug(
+                        f"setting {param_name}({value_cell}) to {value}"
+                    )
                     self.sheet.set(value_cell, value)
                 else:
                     pass
             except:  # noqa E722
                 logger.error("failed in setting parameter values")
-
+        logger.info("Finished setting parameters, recomputing...")
         self.doc.recompute()
 
     def set_parameter_by_value(self, variables_to_optimize, X):
         for cell in self.cells:
             try:
-                # print('------------->cell is:',cell)
                 param_name = self.sheet.get(cell)
-                # print('param name is:',param_name,'input config param:',self.input_config_key)
-                # print('Variable to optimize:',variables_to_optimize,'value:',X)
                 if param_name in self.input_config_key:
-                    # print('param name is:',param_name)
                     value = X[0][variables_to_optimize.index(param_name)]
-                    # value= self.input_config_dic[param_name]
                     value = str(value) + "mm"
-                    # print('value is:',value)
-                    # print('--------------------------------------')
                     value_cell = "B" + cell[1:]
                     self.sheet.set(value_cell, value)
                 else:
@@ -105,14 +104,6 @@ class CADAsset(object):
     def print_info(self):
         # to do-recomute to verify if changing the parameters took place.
         self.recompute()
-        pass
-
-        """
-        print("------Body properties:-------")
-        print("  body_area = {:.6f} m^2".format(self.get_outer_area()))
-        print("  body_volume = {:.9f} m^3".format(self.get_outer_volume()))
-        print("------------------------------")
-        """
 
     def recompute(self):
         """
@@ -121,24 +112,23 @@ class CADAsset(object):
         self.clean()
         self.doc.recompute()
 
-    def create_stl(self, location="./stl_repo/"):
-        # To Do :direct stl file to right directory
-        """
-        Generate stl file from the current design
+    def create_stl(self, location: Union[str, Path] = "./stl_repo/"):
+        """Generate stl file from the current design"""
+        location = Path(location)
+        location.mkdir(parents=True, exist_ok=True)
 
-        """
-        # print('In stl')
         try:
             __objs__ = self.doc.getObject("Body")
-            print(__objs__.Name, self.doc.Name)
-            stl_name = "./stl_repo/design.stl"
+            stl_name = f"{location}/design.stl"
             Mesh.export([__objs__], stl_name)
+            logger.info(f"STL file created at {stl_name}")
             del __objs__
         except:  # noqa E722
             logger.error("An error occurred while creating stl file")
 
 
-def create_stl(config, filename):
-    cad_obj = CADAsset(filename, config)
+def create_stl(filename, params, destination="./stl_repo/"):
+    """Create stl file from the parametric CAD file."""
+    cad_obj = CADAsset(filename, params)
     cad_obj.set_parameter()
-    cad_obj.create_stl()
+    cad_obj.create_stl(destination)

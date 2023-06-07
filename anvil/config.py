@@ -29,7 +29,7 @@ class AnvilConfig(BaseModel):
         ..., description="The configurable parameters for the CAD file"
     )
 
-    simulator: Literal["OpenFOAM", "FEA"] = Field(
+    simulator: Literal["OpenFOAM"] = Field(
         default="OpenFOAM", description="The simulator to use for Anvil"
     )
 
