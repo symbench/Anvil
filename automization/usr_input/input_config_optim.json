@@ -57,6 +57,6 @@
 	"budget":8,
 	"optimizer":{
 		"method":"BayesOpt",
-		"aquisition": "LCB"
+		"acquisition": "LCB"
 	}
 }

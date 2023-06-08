@@ -113,7 +113,7 @@ if __name__=='__main__':
      
      if mode=="optimization":
         optimization_method= data["optimizer"]["method"]
-        aq_func= data["optimizer"]["aquisition"]  
+        aq_func= data["optimizer"]["acquisition"]  
         
       
         print('optimization method is:',optimization_method,'Budget is:',budget,'Aq func:',aq_func) 
