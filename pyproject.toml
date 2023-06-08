@@ -1,0 +1,89 @@
+[project]
+name = "anvil"
+version = "0.0.1"
+description = "An open-source SciML tool for automated design evaluation & optimization using CFD based analysis"
+authors = [
+    {name = "Harsh Vardhan", email="harsh.vardhan@vanderbilt.edu"},
+    {name = "Umesh Timalsina", email="umesh.timalsina@vanderbilt.edu"}
+]
+license = {file = "LICENSE.md"}
+readme = "README.md"
+requires-python = ">3.6"
+
+keywords = [
+    "machine-learning",
+    "data-generation",
+    "bayesian-optimization",
+    "computer-aided-engineering",
+    "scientific-machine-learning",
+    "computational-fluid-simulation"
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GPL-3.0",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Scientific/Engineering :: Machine Learning",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Computational Fluid Dynamics",
+    "Topic :: Scientific/Engineering :: Computer-Aided Engineering",
+    "Topic :: Scientific/Engineering :: Data Generation",
+    "Topic :: Scientific/Engineering :: Design Optimization",
+    "Topic :: Software Development",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+
+dependencies = [
+    "pydantic"
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest",
+    "pre-commit",
+    "mkdocs",
+    "mkdocs-material",
+]
+
+docs = [
+    "mkdocs",
+    "mkdocs-material",
+]
+
+[project.urls]
+homepath = "https://github.com/symbench/Anvil"
+documentation = "https://github.com/symbench/Anvil"
+repository = "https://github.com/symbench/Anvil"
+
+# Entrypoint
+[project.scripts]
+anvil = "anvil.__main__:main"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+# https://setuptools.pypa.io/en/stable/userguide/datafiles.html
+[tool.setuptools]
+include-package-data = true
+
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.coverage]
+[tool.coverage.run]
+omit = ["*/tests/*", "*/__init__.py", "*/__main__.py", "*/__version__.py"]
+
+[tool.ruff]
+ignore = ["E501"]
+select = ["E", "W", "F", "C", "B", "I"]
+ignore-init-module-imports = true
+fixable = ["I001"]  # isort fix only
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["E402", "F401"]
