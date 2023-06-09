@@ -36,8 +36,8 @@ scalez,input,continuous,0.001
 ***
 *** Computational Grid -- meshing/solution is run on 8 cores
 ***
-subdomains,input,discrete,8
-computegrid,input,string,(4 2 1)
+subdomains,input,discrete,4
+computegrid,input,string,(2 2 1)
 ***
 *** Flow Characteristics
 ***
@@ -59,9 +59,9 @@ DomainSizeYBot,input,continuous,4
 DomainSizeZLeft,input,continuous,4
 DomainSizeZRight,input,continuous,4
 ** Block mesh will create domain/cellSize? cells in tha ? direction
-cellSizeX,input,continuous,0.2
-cellSizeY,input,continuous,0.2
-cellSizeZ,input,continuous,0.2
+cellSizeX,input,continuous,0.5
+cellSizeY,input,continuous,0.5
+cellSizeZ,input,continuous,0.5
 ***
 *** SNAPPY HEX MESH REFINEMENT
 ***

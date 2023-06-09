@@ -363,6 +363,7 @@ class prepare_dexfile(getset_dex_file):
     
     def set_dexof_parameters(self,config_data):
        for key, value in config_data["foam_config"].items():
+           print("--> key is:",key,"values is:",value)
            if key =="meshing":
              if value=='self':
                self.setall_mesh(config_data["foam_config"]["meshsize"])
@@ -377,6 +378,7 @@ class prepare_dexfile(getset_dex_file):
    
     def set_dexof_parameters_mesh(self,config_data,mesh):
        for key, value in config_data["foam_config"].items():
+           print("--> key is:",key,"values is:",value)
            if key =="meshing":
               if value=='auto':
                 self.setall_mesh(mesh)
@@ -397,26 +399,27 @@ class read_results():
           self.default_max=1e6
           self.result_dir= directory
      
-     def read_dragforce(self):
+     def read_force(self):
        try:
          #reading results from folder
          src_resultfile=self.result_dir+'/results.log'
          with open(src_resultfile, 'r') as f:
            result_output=f.read()
     
-         Fd_out=re.search(r"Total\s+:\s*\(\s*\d*\.\d*",result_output)
-         if Fd_out: 
-           Fd_found = Fd_out.group(0).split(': (')[1]
-           Fd_found= float(Fd_found)
+         F_out= re.search(r"Total\s+:\s*-*\(\s*\d*\.\d*\s*-*\d*\.\d*",result_output) 
+         print('forces are:', F_out)
+         if F_out: 
+           F_found = F_out.group(0).split(': (')[1].split(" ")
+           print('List of forces:',F_found)
+           drag=float(F_found[0]); lift= float(F_found[1])
+           
          else: 
-           Fd_found= self.default_max
-         if Fd_found==0: 
-           Fd_found=self.default_max
-
-         print('Drag force is:', Fd_found)
-         return Fd_found
+           drag= self.default_max; lift= self.default_max
+         if drag==0: 
+           drag= self.default_max; lift= self.default_max
+         return [drag,lift]
        except:
-         print("An exception occurred- Missing result file") 
+         print("!An exception occurred- Missing result file!") 
 
 
 
@@ -450,7 +453,7 @@ if __name__ == "__main__":
                 dex_file_editor.set_dexof_parameters(data)
                 result_folder=foam_sim.run()
                 _result_reader_= read_results(result_folder)
-                Fd= _result_reader_.read_dragforce()
+                F= _result_reader_.read_force()
              elif value=='auto':
                 alt_mesh=[0.5,0.4, 0.3,0.25,0.2,0.15,0.1,0.08,0.06,0.05,0.02,0.01,0.005] 
                 for _mesh_ in alt_mesh:
@@ -458,9 +461,9 @@ if __name__ == "__main__":
                     dex_file_editor.set_dexof_parameters_mesh(data,_mesh_)                    
                     result_folder=foam_sim.run()
                     _result_reader_= read_results(result_folder)
-                    Fd= _result_reader_.read_dragforce()
+                    F= _result_reader_.read_force()
                     print('mesh size is {} and found drag force is {}'.format(_mesh_,Fd))
-                    if (Fd<default_max):
+                    if (F[0]<default_max):
                        break
 
              #to do : add convergence based adaptive meshing ---- if we need mesh-independent result

@@ -29,6 +29,24 @@ class getset_dex_file():
         max_iter_string= 'maxiter,input,discrete,'+ str(iter)
         self.contents=re.sub('maxiter,input,discrete,.*',max_iter_string,self.contents)
     
+    def get_subdomains(self):
+       return re.split('maxiter,input,discrete,',re.findall('subdomains,input,discrete,.*',self.contents)[0])[1]
+
+    def set_subdomains(self,core):
+        subdomains_string= 'subdomains,input,discrete,'+ str(core)
+        self.contents=re.sub('subdomains,input,discrete,.*',subdomains_string,self.contents)
+        print('******************in subdomian setting**********************')
+        if core ==2:
+          computegrid_string= 'computegrid,input,string,'+'(2 1 1)'
+        elif core==4: 
+          computegrid_string= 'computegrid,input,string,'+'(2 2 1)'
+        elif core==8:
+          computegrid_string= 'computegrid,input,string,'+'(4 2 1)'
+        elif core==16: 
+          computegrid_string= 'computegrid,input,string,'+'(4 2 2)'
+        elif core==32:
+          computegrid_string= 'computegrid,input,string,'+'(8 2 2)'
+        self.contents=re.sub('computegrid,input,string,.*',computegrid_string,self.contents)
     
     def get_infile(self):
        return re.split('infile,input,string,',re.findall('infile,input,string,.*',self.contents)[0])[1]

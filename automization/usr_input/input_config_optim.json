@@ -13,6 +13,7 @@
 		"casefoldername": "UUVhull",
 		"maxiter": 500,
 		"infile": "./stl_repo/design.stl",
+		"subdomains":4,
 		"aoa": 0,
 		"Uinlet": 20.0,
 		"kinematic_viscosity": 0.000362,
@@ -57,6 +58,7 @@
 	"budget":8,
 	"optimizer":{
 		"method":"BayesOpt",
-		"acquisition": "LCB"
+		"acquisition": "LCB",
+		"target":"drag"
 	}
 }
