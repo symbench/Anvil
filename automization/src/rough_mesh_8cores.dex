@@ -59,9 +59,9 @@ DomainSizeYBot,input,continuous,4
 DomainSizeZLeft,input,continuous,4
 DomainSizeZRight,input,continuous,4
 ** Block mesh will create domain/cellSize? cells in tha ? direction
-cellSizeX,input,continuous,0.5
-cellSizeY,input,continuous,0.5
-cellSizeZ,input,continuous,0.5
+cellSizeX,input,continuous,0.3
+cellSizeY,input,continuous,0.3
+cellSizeZ,input,continuous,0.3
 ***
 *** SNAPPY HEX MESH REFINEMENT
 ***

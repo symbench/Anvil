@@ -5,7 +5,7 @@
 # December 13 - 2021
 # Release 0.1
 ####################################
-#Edited and modifed by Vardhan Harsh (as part of Symbench project)
+#Edited and modifed by Vardhan Harsh , Vanderbilt University (as part of Symbench project)
 
 import numpy as np
 import stl
@@ -20,6 +20,7 @@ import subprocess
 import re
 import argparse
 from dexof_config_getsetter import *
+import shutil
 
 class run_openfoam():
   """
@@ -158,7 +159,7 @@ class run_openfoam():
     scalex = float(configdict['scalex'])
     scaley = float(configdict['scaley'])
     scalez = float(configdict['scalez'])
-    print('present working dir:',os.getcwd(),'Infile is:',infile)
+    #print('present working dir:',os.getcwd(),'Infile is:',infile)
     your_mesh = mesh.Mesh.from_file(infile)
     # decrease loglevel
     your_mesh.logger.setLevel(logging.ERROR)
@@ -181,7 +182,7 @@ class run_openfoam():
     if 'aref_lift' not in configdict:
         cmd = "parea -xz -stl " + "temp.stl"
         outpa = os.popen(cmd).read()
-        print("****outpa:",outpa)
+        #print("****outpa:",outpa)
         # print(lref)
         aref_lift = float(outpa.split(":")[1])
         outdict['aref_lift'] = aref_lift
@@ -189,7 +190,7 @@ class run_openfoam():
     if 'aref_drag' not in configdict:
         cmd = "parea -yz -stl " + "temp.stl"
         outpa = os.popen(cmd).read()
-        print("^^^^outpa:",outpa, 'splitted outpa:',outpa.split(":"))
+        #print("^^^^outpa:",outpa, 'splitted outpa:',outpa.split(":"))
         aref_drag = float(outpa.split(":")[1])
         outdict['aref_drag'] = aref_drag
 
@@ -273,10 +274,10 @@ class run_openfoam():
         os.makedirs(casefolder)
     else:
         print("Warning: Casefolder already exists, files will be overwritten")
-
+        #pass
     # create files that need to be templated
     ofcopycmd  = 'cp -r ' + problemdict['dexof_path']+"/ofTemplate/* " + casefolder
-    print("Copying::",ofcopycmd)
+    #print("Copying::",ofcopycmd)
     #os.system('cp -r ofTemplate/* '+ casefolder)
     os.system(ofcopycmd)
     # move stl file into the casefolder
@@ -298,15 +299,15 @@ class run_openfoam():
         keys_values = problemdict.items()
         new_d = {str(key): str(value) for key, value in keys_values}
         json.dump(new_d, outfile,indent=4)
-    print("Case folder (%s) has been created " % casefolder)
-    print("Problem definition %s/problem_def.json is written into the case folder"%casefolder)
+    #print("Case folder (%s) has been created " % casefolder)
+    #print("Problem definition %s/problem_def.json is written into the case folder"%casefolder)
     return casefolder
 
 
 
   def run(self):
     dexof_path = os.path.dirname(os.path.realpath(__file__))
-    print("Path: ",dexof_path)
+    #print("Path: ",dexof_path)
     current_dir = os.path.abspath(os.getcwd())
 
     # dex file is postional 0
@@ -319,19 +320,19 @@ class run_openfoam():
     problemdict.update(self.computational_domain(problemdict))
 
     if 'refinementLevel' not in problemdict:
-     print('WARNING - The mesh surface refinement level is not specified. Default values of (5 7) will be used.')
+     #print('WARNING - The mesh surface refinement level is not specified. Default values of (5 7) will be used.')
      problemdict['refinementLevel'] = '(5 7)'
 
     # calculate turbulence properties
     problemdict.update(self.getSSTparams(problemdict))
     case_folder=self.setup_of(problemdict)
-    print("**** ALL DONE ****")
+    #print("**** ALL DONE ****")
     # do the overwrite.
     cfd_dir= os.getcwd()
     os.chdir(case_folder)
-    print('present working dir:',os.getcwd())
+    #print('present working dir:',os.getcwd())
     subprocess.run('./Allclean')
-    print('cleaning done')
+    #print('cleaning done')
     sim_out = subprocess.run('./Allrun', capture_output=True, text=True)
 
 
@@ -363,7 +364,7 @@ class prepare_dexfile(getset_dex_file):
     
     def set_dexof_parameters(self,config_data):
        for key, value in config_data["foam_config"].items():
-           print("--> key is:",key,"values is:",value)
+           #print("--> key is:",key,"values is:",value)
            if key =="meshing":
              if value=='self':
                self.setall_mesh(config_data["foam_config"]["meshsize"])
@@ -378,7 +379,7 @@ class prepare_dexfile(getset_dex_file):
    
     def set_dexof_parameters_mesh(self,config_data,mesh):
        for key, value in config_data["foam_config"].items():
-           print("--> key is:",key,"values is:",value)
+           #print("--> key is:",key,"values is:",value)
            if key =="meshing":
               if value=='auto':
                 self.setall_mesh(mesh)
@@ -407,16 +408,21 @@ class read_results():
            result_output=f.read()
     
          F_out= re.search(r"Total\s+:\s*-*\(\s*\d*\.\d*\s*-*\d*\.\d*",result_output) 
-         print('forces are:', F_out)
+         #print('forces are:', F_out)
          if F_out: 
            F_found = F_out.group(0).split(': (')[1].split(" ")
            print('List of forces:',F_found)
-           drag=float(F_found[0]); lift= float(F_found[1])
-           
+           drag=float(F_found[0]); lift= float(F_found[1])         
          else: 
            drag= self.default_max; lift= self.default_max
          if drag==0: 
            drag= self.default_max; lift= self.default_max
+         if abs(drag) <0.01:
+            if drag<0 : drag=-0.01
+            else: drag=0.01
+         if abs(lift) <0.01:
+            if lift<0 : lift=-0.01
+            else: lift=0.01
          return [drag,lift]
        except:
          print("!An exception occurred- Missing result file!") 

@@ -53,12 +53,12 @@
 			"max": 100
 		}
 	},
-  "mode":"data_generation",
-	"sampling_method":"random",
-	"budget":8,
-	"optimizer":{
+  "mode":"optimization",
+  "sampling_method":"lhc_maximin",
+  "budget":2,
+  "optimizer":{
 		"method":"BayesOpt",
 		"acquisition": "LCB",
-		"target":"drag"
+		"target":"lift"
 	}
 }

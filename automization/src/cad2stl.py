@@ -26,7 +26,7 @@ class CAD_asset(object):
         self.doc = FreeCAD.open(filename)
         self.sheet = self.doc.getObjectsByLabel('Spreadsheet')[0]
         
-        print('***Parametric properties are:***',dir(self.sheet))
+        #print('***Parametric properties are:***',dir(self.sheet))
         
         par_variables= list(vars(self.sheet).keys())
         
@@ -35,15 +35,15 @@ class CAD_asset(object):
         
         #finding how many are there in CAD drawing
         self.cells=list(set(placeholder_cells).intersection(par_variables))
-        print('-->cells:',self.cells)
+        #print('-->cells:',self.cells)
         self.cad_variables_name=[self.sheet.get(cell) for cell in self.cells]
         
         
         
         self.input_config_dic=param_dictionary
-        print('param dict:',param_dictionary)
+        #print('param dict:',param_dictionary)
         self.input_config_key= list(param_dictionary.keys())
-        print('input keys:',self.input_config_key)
+        #print('input keys:',self.input_config_key)
         
         
         try:
