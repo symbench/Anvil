@@ -1,0 +1,59 @@
+{
+	"seed_cad":"../usr_input/winged_design.FCStd",
+	"cad_param": {
+		"nose_radius": 200,
+		"fuselage_length": 95,
+		"tail_length": 200,
+		"thickness_wing": 10,
+		"half_span":50,
+		"chord":100
+	},
+	"foam_config": {
+		"casefoldername": "UUVhull",
+		"maxiter": 500,
+		"infile": "./stl_repo/design.stl",
+		"subdomains":4,
+		"aoa": 0,
+		"Uinlet": 20.0,
+		"kinematic_viscosity": 0.000362,
+		"kInlet": 0.06,
+		"density": 1.225,
+		"omegaInlet": 25.55,
+		"meshing": "auto",
+		"meshsize": 0.2
+	},
+	"design_space": {
+		"nose_radius": {
+			"min": 100,
+			"max": 800
+		},
+		"fuselage_length": {
+			"min": 100,
+			"max": 800
+		},
+		"tail_length": {
+			"min": 100,
+			"max": 800
+		},
+		"thickness_wing": {
+			"min": 5,
+			"max": 50
+		},
+		"half_span": {
+			"min": 50,
+			"max": 200
+		},
+		"chord": {
+			"min": 50,
+			"max": 200
+		}
+	},
+  "mode":"optimization",
+  "sampling_method":"lhc_maximin",
+  "budget":2,
+  "optimizer":{
+		"method":"BayesOpt",
+		"acquisition": "LCB",
+		"target":"lift_drag_ratio"
+	}
+}
