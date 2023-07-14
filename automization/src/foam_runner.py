@@ -1,10 +1,3 @@
-###Original source of this code##
-# DexOF - DEXter openfoam interface.
-# Stevens Institute of Technology
-# Pitz & Pochiraju
-# December 13 - 2021
-# Release 0.1
-####################################
 #Edited and modifed by Vardhan Harsh , Vanderbilt University (as part of Symbench project)
 
 import numpy as np
@@ -162,7 +155,8 @@ class run_openfoam():
     #print('present working dir:',os.getcwd(),'Infile is:',infile)
     your_mesh = mesh.Mesh.from_file(infile)
     # decrease loglevel
-    your_mesh.logger.setLevel(logging.ERROR)
+    #your_mesh.logger.setLevel(logging.ERROR)
+    logging.getLogger("stl").setLevel(logging.ERROR)
 
     volume, cog, inertia = your_mesh.get_mass_properties()
     # print("Volume                                  = {0}".format(volume))
