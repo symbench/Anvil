@@ -12,7 +12,7 @@ import logging
 import subprocess
 import re
 import argparse
-from dexof_config_getsetter import *
+from .dexof_config_getsetter import *
 import shutil
 
 class run_openfoam():

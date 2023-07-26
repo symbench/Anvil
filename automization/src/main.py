@@ -42,9 +42,20 @@ def save_data(file_name,x):
       f.write("\n")
       np.savetxt(f,x,newline=", ")
 
+    
 
 if __name__=='__main__':
-     with open('../usr_input/input_config.json', 'r') as f:
+     
+     parser = argparse.ArgumentParser(prog='Anvil',
+                    description='Design evalution using CAD_CFD',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+     parser.add_argument('--config',  default='../usr_input/input_config.json',required=True,type=str)
+    
+     args = parser.parse_args()
+     config_file=args.config
+
+     
+     with open(config_file, 'r') as f:
        data = json.load(f)
      
      cad_seed_loc= data["seed_cad"]
@@ -75,7 +86,7 @@ if __name__=='__main__':
                    pass
 
         dex_source_loc = 'rough_mesh_8cores.dex'
-        print('dex source loc:', dex_source_loc)
+        print('->dex source loc:', dex_source_loc)
         dex_file_editor= prepare_dexfile(dex_source_loc)
         foam_sim= run_openfoam(dex_source_loc)
     
@@ -126,7 +137,7 @@ if __name__=='__main__':
         and finally run CFD sim by using run_cfd() function
         '''
         #print("X is:",X,'variables are:',variables_to_optimize)
-        print("Opt target is:",target)
+        #print("Opt target is:",target)
         cad_obj.set_parameter_by_value(variables_to_optimize,X)
         cad_obj.create_stl()
         force=run_cfd()
@@ -145,14 +156,14 @@ if __name__=='__main__':
         aq_func= data["optimizer"]["acquisition"]  
         target= data["optimizer"]["target"]
 
-        print('optimization method is:',optimization_method,'Budget is:',budget,'Aq func:',aq_func,'opt target:',target) 
+        print('==> Optimization method is:',optimization_method,',Budget is:',budget,',Aq func:',aq_func,',optimization target is:',target,'.') 
         
         bound=[]; variables_to_optimize=[]
         for key, value in data["design_space"].items():
            #print('key is:',key,'Value is:',value)
            bound.append({'name': key, 'type': 'continuous', 'domain': (value["min"],value["max"])})
            variables_to_optimize.append(key)
-        print('bound is:',bound)
+        print('--> bound is:',bound)
         
      
         

@@ -1,4 +1,4 @@
-from utils import *
+from .utils import *
 add_freecad_libs_to_path()
 
 import FreeCAD  
@@ -22,8 +22,9 @@ class CAD_asset(object):
         parameters.
         """
         self.filename = filename
-        print("Opening:", filename)
+        print("--> Provided parametric CAD file is :", filename)
         self.doc = FreeCAD.open(filename)
+        print("Opened the CAD file***")
         self.sheet = self.doc.getObjectsByLabel('Spreadsheet')[0]
         
         #print('***Parametric properties are:***',dir(self.sheet))
@@ -53,7 +54,7 @@ class CAD_asset(object):
          print('CAD parameters are:{},\n Config file variables are:{}'.format(self.cad_variables,self.input_param))
          sys.exit()
           
-        print('Didnt exit')
+        print('**Everything looks good with CAD set-up***')
         
 
     def check_cells(self,column:str):

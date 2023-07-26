@@ -1,0 +1,44 @@
+FROM ubuntu:focal
+
+USER root
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+ENV TZ=America/Chicago
+
+RUN apt-get update
+RUN apt-get install -y apt-utils 2>/dev/null
+RUN apt-get install -y tzdata
+RUN apt-get dist-upgrade -y
+RUN apt-get install -y freecad gmsh git nano python3-pip
+
+RUN apt-get install -y numpy-stl\
+  && pip3 install numpy\
+  && pip3 install --upgrade pip  \
+  && pip3 install kajiki parea
+  
+RUN apt-get update \
+  && apt-get install -y \
+		sudo \
+		wget \
+        curl 
+        
+# Create a new user called foam
+RUN useradd --user-group --create-home --shell /bin/bash ubuntu ;\
+	echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+RUN curl -s https://dl.openfoam.com/add-debian-repo.sh | bash ;\
+     apt-get -y install openfoam2112-default; \
+     echo "source /usr/lib/openfoam/openfoam2112/etc/bashrc " >> /home/ubuntu/.bashrc; \
+     echo "export OMPI_MCA_btl_vader_single_copy_mechanism=none" >> /home/ubuntu/.bashrc ;\
+     echo "source /home/ubuntu/.bashrc" >> /home/ubuntu/.profile
+
+# set the default container user to foam
+USER ubuntu
+
+WORKDIR /home/ubuntu
+COPY --chown=ubuntu:ubuntu . /home/ubuntu
+RUN pip3 install -e .
+ENV PATH "$PATH:/home/ubuntu/.local/bin"
+
+CMD ["", "--config", "--ip=0.0.0.0"]
